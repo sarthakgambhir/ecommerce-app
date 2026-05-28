@@ -8,6 +8,7 @@ export default function ProductCard({ product }) {
   return (
     <Link
       href={`/products/${product._id}`}
+      prefetch={true}
       className="card group block overflow-hidden p-3 hover:-translate-y-1 hover:shadow-xl"
     >
       <div className="relative mb-4 h-52 w-full overflow-hidden rounded-xl">
