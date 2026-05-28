@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
+import Image from "next/image"
 
 export default function ProductDetailPage() {
   const { id } = useParams()
@@ -9,14 +10,17 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     fetch(`/api/products/${id}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch product")
+        }
+        return res.json()
+      })
       .then((data) => {
-        console.log("Product data:", data)  // ← added this
         setProduct(data)
         setLoading(false)
       })
-      .catch((err) => {
-        console.log("Error:", err)          // ← added this
+      .catch(() => {
         setLoading(false)
       })
   }, [id])
@@ -25,7 +29,8 @@ export default function ProductDetailPage() {
 
 function addToCart() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]")
-  const existing = cart.find((item) => item.id === product.id)
+  const productId = product._id || product.id
+  const existing = cart.find((item) => (item._id || item.id) === productId)
 
   if (existing) {
     existing.qty += 1
@@ -34,7 +39,7 @@ function addToCart() {
   }
 
   localStorage.setItem("cart", JSON.stringify(cart))
-  window.dispatchEvent(new Event("storage")) // ← updates navbar count
+  window.dispatchEvent(new Event("cart-updated"))
   setAdded(true)
   setTimeout(() => setAdded(false), 2000)   // ← resets after 2 seconds
 }
@@ -45,11 +50,15 @@ function addToCart() {
   return (
     <main className="p-8 max-w-4xl mx-auto">
       <div className="flex flex-col md:flex-row gap-8">
-        <img
-          src={product.image}
-          alt={product.name}
-          className="w-full md:w-1/2 h-80 object-cover rounded-xl"
-        />
+        <div className="relative w-full md:w-1/2 h-80">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover rounded-xl"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
         <div className="flex flex-col justify-center">
           <p className="text-sm text-gray-400 mb-1">{product.category}</p>
           <h1 className="text-3xl font-bold mb-2">{product.name}</h1>

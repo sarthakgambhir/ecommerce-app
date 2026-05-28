@@ -14,7 +14,11 @@ export default function Navbar() {
 
     updateCount()
     window.addEventListener("storage", updateCount)
-    return () => window.removeEventListener("storage", updateCount)
+    window.addEventListener("cart-updated", updateCount)
+    return () => {
+      window.removeEventListener("storage", updateCount)
+      window.removeEventListener("cart-updated", updateCount)
+    }
   }, [])
 
   return (

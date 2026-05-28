@@ -1,9 +1,39 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useSyncExternalStore } from "react"
 import { useRouter } from "next/navigation"
 
+let cartSnapshotCacheRaw = null
+let cartSnapshotCacheValue = []
+
+function subscribeToCart(callback) {
+  window.addEventListener("storage", callback)
+  window.addEventListener("cart-updated", callback)
+  return () => {
+    window.removeEventListener("storage", callback)
+    window.removeEventListener("cart-updated", callback)
+  }
+}
+
+function getCartSnapshot() {
+  const raw = localStorage.getItem("cart") || "[]"
+  if (raw === cartSnapshotCacheRaw) {
+    return cartSnapshotCacheValue
+  }
+  cartSnapshotCacheRaw = raw
+  cartSnapshotCacheValue = JSON.parse(raw)
+  return cartSnapshotCacheValue
+}
+
+function getCartServerSnapshot() {
+  return []
+}
+
 export default function CheckoutPage() {
-  const [cart, setCart] = useState([])
+  const cart = useSyncExternalStore(
+    subscribeToCart,
+    getCartSnapshot,
+    getCartServerSnapshot
+  )
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [address, setAddress] = useState("")
@@ -12,12 +42,14 @@ export default function CheckoutPage() {
   const router = useRouter()
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("cart") || "[]")
-    if (stored.length === 0) {
+    if (cart.length === 0) {
       router.push("/cart")
     }
-    setCart(stored)
-  }, [])
+  }, [cart.length, router])
+
+  function getItemId(item) {
+    return item._id || item.id
+  }
 
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
 
@@ -72,6 +104,7 @@ export default function CheckoutPage() {
 
     // clear the cart
     localStorage.removeItem("cart")
+    window.dispatchEvent(new Event("cart-updated"))
 
     setLoading(false)
     setOrdered(true)
@@ -104,7 +137,7 @@ export default function CheckoutPage() {
       <div className="bg-white rounded-xl shadow p-6 mb-6">
         <h2 className="font-semibold text-lg mb-4">Order Summary</h2>
         {cart.map((item) => (
-          <div key={item.id} className="flex justify-between mb-2 text-sm">
+          <div key={getItemId(item)} className="flex justify-between mb-2 text-sm">
             <span>{item.name} × {item.qty}</span>
             <span>₹{item.price * item.qty}</span>
           </div>

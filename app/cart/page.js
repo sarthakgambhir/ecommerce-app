@@ -1,23 +1,52 @@
 "use client"
-import { useState, useEffect } from "react"
+import { useSyncExternalStore } from "react"
 import Link from "next/link"
 import CartItem from "@/components/Cartitem"
 
-export default function CartPage() {
-  const [cart, setCart] = useState([])
+let cartSnapshotCacheRaw = null
+let cartSnapshotCacheValue = []
 
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("cart") || "[]")
-    setCart(stored)
-  }, [])
+function subscribeToCart(callback) {
+  window.addEventListener("storage", callback)
+  window.addEventListener("cart-updated", callback)
+  return () => {
+    window.removeEventListener("storage", callback)
+    window.removeEventListener("cart-updated", callback)
+  }
+}
+
+function getCartSnapshot() {
+  const raw = localStorage.getItem("cart") || "[]"
+  if (raw === cartSnapshotCacheRaw) {
+    return cartSnapshotCacheValue
+  }
+  cartSnapshotCacheRaw = raw
+  cartSnapshotCacheValue = JSON.parse(raw)
+  return cartSnapshotCacheValue
+}
+
+function getCartServerSnapshot() {
+  return []
+}
+
+export default function CartPage() {
+  const cart = useSyncExternalStore(
+    subscribeToCart,
+    getCartSnapshot,
+    getCartServerSnapshot
+  )
+
+  function getItemId(item) {
+    return item._id || item.id
+  }
 
   function saveCart(updatedCart) {
-    setCart(updatedCart)
     localStorage.setItem("cart", JSON.stringify(updatedCart))
+    window.dispatchEvent(new Event("cart-updated"))
   }
 
   function handleRemove(id) {
-    const updated = cart.filter((item) => item.id !== id)
+    const updated = cart.filter((item) => getItemId(item) !== id)
     saveCart(updated)
   }
 
@@ -27,7 +56,7 @@ export default function CartPage() {
       return
     }
     const updated = cart.map((item) =>
-      item.id === id ? { ...item, qty: newQty } : item
+      getItemId(item) === id ? { ...item, qty: newQty } : item
     )
     saveCart(updated)
   }
@@ -51,7 +80,7 @@ export default function CartPage() {
 
       {cart.map((item) => (
         <CartItem
-          key={item.id}
+          key={getItemId(item)}
           item={item}
           onRemove={handleRemove}
           onUpdateQty={handleUpdateQty}

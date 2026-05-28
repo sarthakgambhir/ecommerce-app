@@ -5,17 +5,28 @@ import ProductCard from "@/components/ProductCard"
 export default function ProductsPage() {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
 
   useEffect(() => {
     fetch("/api/products")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Failed to fetch products")
+        }
+        return res.json()
+      })
       .then((data) => {
         setProducts(data)
+        setLoading(false)
+      })
+      .catch(() => {
+        setError("Could not load products right now.")
         setLoading(false)
       })
   }, [])
 
   if (loading) return <div className="p-8 text-gray-500">Loading products...</div>
+  if (error) return <div className="p-8 text-red-500">{error}</div>
 
   return (
     <main className="p-8 max-w-6xl mx-auto">
