@@ -1,11 +1,10 @@
-import { getProductById } from "@/lib/products"
+import { connectDB } from "@/lib/mongodb"
+import Product from "@/models/Product"
 
-// GET one product
 export async function GET(request, { params }) {
+  await connectDB()
   const { id } = await params
-
-
-  const product = getProductById(id)
+  const product = await Product.findById(id)
 
   if (!product) {
     return Response.json({ error: "Product not found" }, { status: 404 })
@@ -13,29 +12,24 @@ export async function GET(request, { params }) {
 
   return Response.json(product)
 }
-// PUT - update a product
+
 export async function PUT(request, { params }) {
-  const product = getProductById(params.id)
+  await connectDB()
+  const { id } = await params
+  const body = await request.json()
+  const product = await Product.findByIdAndUpdate(id, body, { new: true })
 
   if (!product) {
     return Response.json({ error: "Product not found" }, { status: 404 })
   }
 
-  const body = await request.json()
-
-  // Merge existing product with updates
-  const updatedProduct = {
-    ...product,
-    ...body,
-    id: params.id, // never allow id to change
-  }
-
-  return Response.json(updatedProduct)
+  return Response.json(product)
 }
 
-// DELETE - delete a product
 export async function DELETE(request, { params }) {
-  const product = getProductById(params.id)
+  await connectDB()
+  const { id } = await params
+  const product = await Product.findByIdAndDelete(id)
 
   if (!product) {
     return Response.json({ error: "Product not found" }, { status: 404 })

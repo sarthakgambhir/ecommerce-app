@@ -1,11 +1,14 @@
-import { getAllProducts } from "@/lib/products"
+import { connectDB } from "@/lib/mongodb"
+import Product from "@/models/Product"
 
 export async function GET() {
-  const products = getAllProducts()
+  await connectDB()
+  const products = await Product.find()
   return Response.json(products)
 }
 
 export async function POST(request) {
+  await connectDB()
   const body = await request.json()
 
   if (!body.name || !body.price) {
@@ -15,14 +18,6 @@ export async function POST(request) {
     )
   }
 
-  const newProduct = {
-    id: Date.now().toString(),
-    name: body.name,
-    price: body.price,
-    description: body.description || "",
-    image: body.image || "",
-    category: body.category || "",
-  }
-
-  return Response.json(newProduct, { status: 201 })
+  const product = await Product.create(body)
+  return Response.json(product, { status: 201 })
 }
