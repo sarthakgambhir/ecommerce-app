@@ -25,7 +25,7 @@ function getCartSnapshot() {
 }
 
 function getCartServerSnapshot() {
-  return []
+  return null
 }
 
 export default function CheckoutPage() {
@@ -42,16 +42,17 @@ export default function CheckoutPage() {
   const router = useRouter()
 
   useEffect(() => {
-    if (cart.length === 0) {
+    if (!ordered && Array.isArray(cart) && cart.length === 0) {
       router.push("/cart")
     }
-  }, [cart.length, router])
+  }, [ordered, cart, router])
 
   function getItemId(item) {
     return item._id || item.id
   }
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+  const safeCart = Array.isArray(cart) ? cart : []
+  const total = safeCart.reduce((sum, item) => sum + item.price * item.qty, 0)
   const formattedTotal = new Intl.NumberFormat("en-IN").format(total)
 
   function validateEmail(email) {
@@ -86,7 +87,7 @@ export default function CheckoutPage() {
       customerName: name,
       customerEmail: email,
       customerAddress: address,
-      items: cart,
+      items: safeCart,
       totalAmount: total,
     }
 
@@ -130,6 +131,10 @@ export default function CheckoutPage() {
     )
   }
 
+  if (!Array.isArray(cart)) {
+    return <main className="container-page max-w-3xl text-gray-500">Loading checkout...</main>
+  }
+
   return (
     <main className="container-page max-w-3xl">
       <h1 className="mb-6 text-3xl font-bold text-gray-900">Checkout</h1>
@@ -137,7 +142,7 @@ export default function CheckoutPage() {
       {/* Order Summary */}
       <div className="card mb-6 p-6">
         <h2 className="mb-4 text-lg font-semibold text-gray-900">Order Summary</h2>
-        {cart.map((item) => (
+        {safeCart.map((item) => (
           <div key={getItemId(item)} className="mb-2 flex justify-between text-sm text-gray-600">
             <span>{item.name} × {item.qty}</span>
             <span>₹{new Intl.NumberFormat("en-IN").format(item.price * item.qty)}</span>
