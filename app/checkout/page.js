@@ -52,6 +52,7 @@ export default function CheckoutPage() {
   }
 
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+  const formattedTotal = new Intl.NumberFormat("en-IN").format(total)
 
   function validateEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -112,15 +113,15 @@ export default function CheckoutPage() {
 
   if (ordered) {
     return (
-      <main className="p-8 max-w-2xl mx-auto text-center">
-        <div className="bg-white rounded-xl shadow p-8">
-          <h1 className="text-3xl font-bold mb-4">🎉 Order Placed!</h1>
-          <p className="text-gray-500 mb-6">
+      <main className="container-page max-w-2xl text-center">
+        <div className="card p-8">
+          <h1 className="mb-3 text-3xl font-bold text-gray-900">Order Placed</h1>
+          <p className="mb-6 text-gray-500">
             Thank you {name}! Your order has been placed successfully.
           </p>
           <button
             onClick={() => router.push("/products")}
-            className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+            className="rounded-xl bg-black px-6 py-3 font-semibold text-white hover:bg-gray-800"
           >
             Continue Shopping
           </button>
@@ -130,57 +131,53 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="p-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Checkout</h1>
+    <main className="container-page max-w-3xl">
+      <h1 className="mb-6 text-3xl font-bold text-gray-900">Checkout</h1>
 
       {/* Order Summary */}
-      <div className="bg-white rounded-xl shadow p-6 mb-6">
-        <h2 className="font-semibold text-lg mb-4">Order Summary</h2>
+      <div className="card mb-6 p-6">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Order Summary</h2>
         {cart.map((item) => (
-          <div key={getItemId(item)} className="flex justify-between mb-2 text-sm">
+          <div key={getItemId(item)} className="mb-2 flex justify-between text-sm text-gray-600">
             <span>{item.name} × {item.qty}</span>
-            <span>₹{item.price * item.qty}</span>
+            <span>₹{new Intl.NumberFormat("en-IN").format(item.price * item.qty)}</span>
           </div>
         ))}
-        <div className="border-t mt-4 pt-4 flex justify-between font-bold">
+        <div className="mt-4 flex justify-between border-t pt-4 text-lg font-bold text-gray-900">
           <span>Total</span>
-          <span>₹{total}</span>
+          <span>₹{formattedTotal}</span>
         </div>
       </div>
 
       {/* Customer Details */}
-      <div className="bg-white rounded-xl shadow p-6 mb-6">
-        <h2 className="font-semibold text-lg mb-4">Your Details</h2>
+      <div className="card mb-6 p-6">
+        <h2 className="mb-4 text-lg font-semibold text-gray-900">Your Details</h2>
         <div className="flex flex-col gap-4">
           <input
             type="text"
             placeholder="Full Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="border rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-black focus:outline-none focus:ring-2 focus:ring-black/20"
           />
           <input
             type="email"
             placeholder="Email Address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="border rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-black focus:outline-none focus:ring-2 focus:ring-black/20"
           />
           <textarea
             placeholder="Delivery Address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             rows={3}
-            className="border rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-black"
+            className="w-full rounded-xl border border-gray-300 px-4 py-2.5 focus:border-black focus:outline-none focus:ring-2 focus:ring-black/20"
           />
         </div>
       </div>
 
-      <button
-        onClick={handlePlaceOrder}
-        disabled={loading}
-        className="w-full bg-black text-white py-3 rounded-lg hover:bg-gray-800 transition disabled:opacity-50"
-      >
+      <button onClick={handlePlaceOrder} disabled={loading} className="w-full rounded-xl bg-black py-3 font-semibold text-white hover:bg-gray-800 disabled:opacity-50">
         {loading ? "Placing Order..." : "Place Order"}
       </button>
     </main>

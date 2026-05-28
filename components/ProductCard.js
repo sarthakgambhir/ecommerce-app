@@ -3,24 +3,30 @@ import Image from "next/image"
 
 export default function ProductCard({ product }) {
   if (!product) return null
+  const formattedPrice = new Intl.NumberFormat("en-IN").format(product.price)
 
   return (
     <Link
       href={`/products/${product._id}`}
-      className="bg-white rounded-xl shadow hover:shadow-md transition p-4 block"
+      className="card group block overflow-hidden p-3 hover:-translate-y-1 hover:shadow-xl"
     >
-      <div className="relative w-full h-48 mb-3">
+      <div className="relative mb-4 h-52 w-full overflow-hidden rounded-xl">
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className="object-cover rounded-lg"
+          className="object-cover transition duration-300 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
         />
       </div>
-      <h2 className="font-semibold text-lg">{product.name}</h2>
-      <p className="text-gray-500 text-sm">{product.category}</p>
-      <p className="text-black font-bold mt-1">₹{product.price}</p>
+      <div className="px-1 pb-2">
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500">{product.category}</p>
+        <h2 className="line-clamp-1 text-lg font-semibold text-gray-900">{product.name}</h2>
+        <div className="mt-3 flex items-center justify-between">
+          <p className="text-xl font-bold text-gray-900">₹{formattedPrice}</p>
+          <span className="rounded-full bg-gray-900 px-3 py-1 text-xs font-medium text-white">View</span>
+        </div>
+      </div>
     </Link>
   )
 }

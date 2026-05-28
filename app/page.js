@@ -5,43 +5,42 @@ export default function Home() {
   return (
     <main>
       {/* Hero Section */}
-      <div style={{ backgroundColor: "#000", color: "#fff" }} className="py-20 px-8 text-center">
-        <h1 className="text-5xl font-bold mb-4">Welcome to MyStore</h1>
-        <p className="text-xl mb-8" style={{ color: "#9ca3af" }}>
+      <section className="relative overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-950 px-6 py-24 text-center text-white">
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-indigo-300">Modern Ecommerce Experience</p>
+          <h1 className="mb-4 text-5xl font-bold leading-tight md:text-6xl">Welcome to MyStore</h1>
+          <p className="mb-8 text-lg text-gray-300 md:text-xl">
           Discover the best products at unbeatable prices
-        </p>
-        <Link
-          href="/products"
-          style={{ backgroundColor: "#fff", color: "#000" }}
-          className="px-8 py-3 rounded-full text-lg font-semibold hover:opacity-90 transition inline-block"
-        >
-          Shop Now →
-        </Link>
-      </div>
+          </p>
+          <Link href="/products" className="inline-flex rounded-full bg-white px-8 py-3 text-lg font-semibold text-gray-900 hover:-translate-y-0.5 hover:bg-gray-100">
+            Shop Now →
+          </Link>
+        </div>
+      </section>
 
       {/* Features Section */}
-      <div style={{ backgroundColor: "#f9fafb" }} className="py-16 px-8">
-        <h2 className="text-2xl font-bold text-center mb-10" style={{ color: "#111827" }}>
+      <section className="container-page">
+        <h2 className="mb-10 text-center text-3xl font-bold text-gray-900">
           Why Shop With Us
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="text-center p-6 rounded-xl" style={{ backgroundColor: "#fff", border: "1px solid #e5e7eb" }}>
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-3">
+          <div className="card text-center p-6">
             <div className="text-4xl mb-3">🚚</div>
-            <h3 className="font-bold text-lg mb-2" style={{ color: "#111827" }}>Free Delivery</h3>
-            <p className="text-sm" style={{ color: "#6b7280" }}>On all orders above ₹999</p>
+            <h3 className="mb-2 text-lg font-bold text-gray-900">Free Delivery</h3>
+            <p className="text-sm text-gray-600">On all orders above ₹999</p>
           </div>
-          <div className="text-center p-6 rounded-xl" style={{ backgroundColor: "#fff", border: "1px solid #e5e7eb" }}>
+          <div className="card text-center p-6">
             <div className="text-4xl mb-3">⭐</div>
-            <h3 className="font-bold text-lg mb-2" style={{ color: "#111827" }}>Quality Products</h3>
-            <p className="text-sm" style={{ color: "#6b7280" }}>100% genuine products</p>
+            <h3 className="mb-2 text-lg font-bold text-gray-900">Quality Products</h3>
+            <p className="text-sm text-gray-600">100% genuine products</p>
           </div>
-          <div className="text-center p-6 rounded-xl" style={{ backgroundColor: "#fff", border: "1px solid #e5e7eb" }}>
+          <div className="card text-center p-6">
             <div className="text-4xl mb-3">↩️</div>
-            <h3 className="font-bold text-lg mb-2" style={{ color: "#111827" }}>Easy Returns</h3>
-            <p className="text-sm" style={{ color: "#6b7280" }}>7 day return policy</p>
+            <h3 className="mb-2 text-lg font-bold text-gray-900">Easy Returns</h3>
+            <p className="text-sm text-gray-600">7 day return policy</p>
           </div>
         </div>
-      </div>
+      </section>
     </main>
   )
 }

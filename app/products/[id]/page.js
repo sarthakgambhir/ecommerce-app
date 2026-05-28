@@ -48,25 +48,26 @@ function addToCart() {
   if (!product || product.error) return <div className="p-8 text-red-500">Product not found.</div>
 
   return (
-    <main className="p-8 max-w-4xl mx-auto">
-      <div className="flex flex-col md:flex-row gap-8">
-        <div className="relative w-full md:w-1/2 h-80">
+    <main className="container-page max-w-5xl">
+      <div className="card flex flex-col gap-8 p-5 md:flex-row md:p-8">
+        <div className="relative h-80 w-full overflow-hidden rounded-xl md:w-1/2 md:h-[28rem]">
           <Image
             src={product.image}
             alt={product.name}
             fill
-            className="object-cover rounded-xl"
+            className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
+            priority
           />
         </div>
         <div className="flex flex-col justify-center">
-          <p className="text-sm text-gray-400 mb-1">{product.category}</p>
-          <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-          <p className="text-gray-600 mb-4">{product.description}</p>
-          <p className="text-2xl font-bold mb-6">₹{product.price}</p>
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-indigo-600">{product.category}</p>
+          <h1 className="mb-2 text-3xl font-bold text-gray-900">{product.name}</h1>
+          <p className="mb-5 leading-relaxed text-gray-600">{product.description}</p>
+          <p className="mb-6 text-3xl font-bold text-gray-900">₹{new Intl.NumberFormat("en-IN").format(product.price)}</p>
           <button
            onClick={addToCart}
-            className={`px-6 py-3 rounded-lg transition font-semibold w-full ${
+            className={`w-full rounded-xl px-6 py-3 font-semibold ${
               added
                 ? "bg-green-500 text-white"
                 : "bg-black text-white hover:bg-gray-800"

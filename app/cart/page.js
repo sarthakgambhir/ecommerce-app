@@ -62,39 +62,44 @@ export default function CartPage() {
   }
 
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
+  const formattedTotal = new Intl.NumberFormat("en-IN").format(total)
 
   if (cart.length === 0) {
     return (
-      <main className="p-8 max-w-2xl mx-auto text-center">
-        <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
-        <Link href="/products" className="text-blue-500 hover:underline">
+      <main className="container-page max-w-2xl text-center">
+        <div className="card p-10">
+          <h1 className="mb-2 text-2xl font-bold text-gray-900">Your cart is empty</h1>
+          <p className="mb-6 text-gray-500">Looks like you have not added anything yet.</p>
+          <Link href="/products" className="inline-flex rounded-full bg-black px-5 py-2.5 font-medium text-white hover:bg-gray-800">
           Continue Shopping
-        </Link>
+          </Link>
+        </div>
       </main>
     )
   }
 
   return (
-    <main className="p-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Your Cart</h1>
+    <main className="container-page max-w-3xl">
+      <h1 className="mb-6 text-3xl font-bold text-gray-900">Your Cart</h1>
 
-      {cart.map((item) => (
+      {cart.map((item, index) => (
         <CartItem
           key={getItemId(item)}
           item={item}
           onRemove={handleRemove}
           onUpdateQty={handleUpdateQty}
+          isPriority={index === 0}
         />
       ))}
 
-      <div className="bg-white p-4 rounded-xl shadow mt-6">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-lg font-semibold">Total</span>
-          <span className="text-2xl font-bold">₹{total}</span>
+      <div className="card mt-8 p-5">
+        <div className="mb-4 flex items-center justify-between">
+          <span className="text-lg font-semibold text-gray-700">Total</span>
+          <span className="text-3xl font-bold text-gray-900">₹{formattedTotal}</span>
         </div>
         <Link
           href="/checkout"
-          className="block text-center bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition"
+          className="block rounded-xl bg-black px-6 py-3 text-center font-semibold text-white hover:bg-gray-800"
         >
           Proceed to Checkout
         </Link>

@@ -1,12 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f7fb;
+  --foreground: #111827;
 }
 
 body {
-  background-color: #f9fafb;
-  color: #111827;
-  font-family: Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at top, #ffffff 0%, var(--background) 45%);
+  color: var(--foreground);
+  font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+a,
+button {
+  transition: all 180ms ease;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.06);
+}
+
+.container-page {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 1.25rem;
 }

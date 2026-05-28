@@ -29,9 +29,13 @@ export default function ProductsPage() {
   if (error) return <div className="p-8 text-red-500">{error}</div>
 
   return (
-    <main className="p-8 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: "#111827" }}>All Products</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <main className="container-page">
+      <div className="mb-8 flex flex-col gap-2">
+        <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600">Collection</p>
+        <h1 className="text-3xl font-bold text-gray-900">All Products</h1>
+        <p className="text-gray-500">Discover top picks curated for daily essentials and style.</p>
+      </div>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
         {products.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}
