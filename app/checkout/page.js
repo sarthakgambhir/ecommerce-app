@@ -21,13 +21,33 @@ export default function CheckoutPage() {
 
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0)
 
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+  
   async function handlePlaceOrder() {
     if (!name || !email || !address) {
       alert("Please fill in all fields")
       return
     }
-
+  
+    if (!validateEmail(email)) {
+      alert("Please enter a valid email address")
+      return
+    }
+  
+    if (name.length < 3) {
+      alert("Please enter your full name")
+      return
+    }
+  
+    if (address.length < 10) {
+      alert("Please enter a complete address")
+      return
+    }
+  
     setLoading(true)
+    // ... rest of your code stays the same
 
     const order = {
       customerName: name,
