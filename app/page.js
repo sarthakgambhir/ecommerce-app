@@ -24,7 +24,7 @@ export default function Home() {
         <h2 className="text-2xl font-bold text-center mb-10" style={{ color: "#111827" }}>
           Why Shop With Us
         </h2>
-        <div className="grid grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <div className="text-center p-6 rounded-xl" style={{ backgroundColor: "#fff", border: "1px solid #e5e7eb" }}>
             <div className="text-4xl mb-3">🚚</div>
             <h3 className="font-bold text-lg mb-2" style={{ color: "#111827" }}>Free Delivery</h3>
